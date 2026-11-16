@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forensic report — TrT</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/brand.css" />
+  <link rel="stylesheet" href="/static/report.css" />
+</head>
+<body>
+
+<header class="site-nav no-print">
+  <a class="trt-lockup" href="/" aria-label="TrT — Threat Recognition and Tracker">
+    <img class="trt-logo" src="/static/trt-mark.png" alt="TrT" width="837" height="323" />
+    <span class="trt-tag">Threat Recognition<br />and Tracker</span>
+  </a>
+  <nav class="nav-links">
+    <a href="/">Home</a>
+    <a href="/dashboard">Dashboard</a>
+    <button class="btn btn-ghost" id="copy-btn" type="button">Copy summary</button>
+    <button class="btn btn-primary" id="print-btn" type="button">
+      <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M4.5 6V2.5h7V6M4.5 11.5h7V14h-7zM3 6h10a1.5 1.5 0 0 1 1.5 1.5v3H13v-1H3v1H1.5v-3A1.5 1.5 0 0 1 3 6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Print / PDF
+    </button>
+  </nav>
+</header>
+
+<main class="report" id="report">
+  <!-- rendered by report.js from the embedded payload -->
+</main>
+
+<footer class="report-foot">
+  <span>TrT local engine v{{ app_version }}</span>
+  <span class="dot-sep">·</span>
+  <span>Generated on this device — no content left the machine</span>
+</footer>
+
+<script id="embedded-case" type="application/json">{{ embedded_case | safe }}</script>
+<script src="/static/report.js"></script>
+</body>
+</html>

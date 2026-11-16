@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TrT">
+  <defs>
+    <linearGradient id="trt" x1="6" y1="58" x2="58" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a2c56"/>
+      <stop offset="52%" stop-color="#0d5bc4"/>
+      <stop offset="100%" stop-color="#4db2f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#ffffff"/>
+  <g fill="url(#trt)">
+    <path d="M7 15h24l-4 8h-5v26h-8V23H7z"/>
+    <path d="M31.5 26h7.5v3.6c1.5-2.4 3.7-3.6 6.5-3.6l-3.6 7.4h-2.9V49h-7.5z"/>
+    <path d="M40 15h20l-5 8h-3.5v26h-8V23H40z"/>
+  </g>
+</svg>

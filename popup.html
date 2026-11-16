@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrT — Threat Recognition and Tracker</title>
+  <link rel="stylesheet" href="ext-brand.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <img class="logo" src="trt-mark.png" alt="TrT" width="837" height="323">
+    <div class="titles">
+      <div class="title">Threat Recognition<br>and Tracker</div>
+      <div class="ver" id="version-display">local engine</div>
+    </div>
+  </header>
+
+  <section class="status" id="status-card" data-state="checking">
+    <div class="status-main">
+      <span class="ring" aria-hidden="true"><i></i></span>
+      <div class="status-text">
+        <strong id="engine-state">Checking engine…</strong>
+        <span id="engine-detail">Looking for the local engine</span>
+      </div>
+    </div>
+    <ul class="components" id="components"></ul>
+    <div class="status-actions" id="status-actions" hidden>
+      <p class="hint" id="offline-hint">
+        Start it with <code>run_local.bat</code>, then retry.
+      </p>
+      <button class="btn btn-ghost" id="retry-btn" type="button">Retry now</button>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <span class="stat-value" id="analyzed-val">—</span>
+      <span class="stat-label">Analysed</span>
+    </div>
+    <div class="stat stat-flag">
+      <span class="stat-value" id="flagged-val">—</span>
+      <span class="stat-label">Flagged</span>
+    </div>
+    <div class="stat stat-safe">
+      <span class="stat-value" id="safe-val">—</span>
+      <span class="stat-label">Safe</span>
+    </div>
+  </section>
+
+  <section class="rows">
+    <div class="row">
+      <span class="lbl">Profile</span>
+      <span class="val" id="profile-val">—</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Active adapters</span>
+      <span class="val" id="adapters-val">—</span>
+    </div>
+    <div class="row">
+      <span class="lbl">Engine port</span>
+      <span class="val mono" id="port-val">—</span>
+    </div>
+    <div class="row">
+      <span class="lbl">IP intelligence</span>
+      <span class="val" id="geo-val">—</span>
+    </div>
+  </section>
+
+  <footer class="actions">
+    <button class="btn btn-primary" id="launch-dashboard" type="button">Open dashboard</button>
+    <button class="btn btn-secondary" id="open-options" type="button">Settings</button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

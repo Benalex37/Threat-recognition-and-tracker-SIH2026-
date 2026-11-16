@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SecOps Dashboard — TrT</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/brand.css" />
+  <link rel="stylesheet" href="/static/dashboard.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="trt-lockup" href="/" aria-label="TrT — Threat Recognition and Tracker">
+        <img class="trt-logo" src="/static/trt-mark.png" alt="TrT" width="837" height="323" />
+        <span class="trt-tag">Threat Recognition<br />and Tracker</span>
+      </a>
+      <span class="brand-divider" aria-hidden="true"></span>
+      <div class="brand-text">
+        <h1>SecOps Dashboard</h1>
+        <p>On-device detection cascade</p>
+      </div>
+    </div>
+
+    <div class="topbar-status">
+      <span class="pill pill-live" id="pill-engine" title="Engine reachability">
+        <span class="pill-dot"></span><span id="pill-engine-text">Engine loaded</span>
+      </span>
+      <span class="pill" id="pill-geo" title="Active IP intelligence database">
+        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M1.8 8h12.4M8 1.8c3.2 3.4 3.2 9 0 12.4M8 1.8C4.8 5.2 4.8 10.8 8 14.2" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>
+        <span id="pill-geo-text">Offline geo</span>
+      </span>
+      <span class="pill" id="pill-updated" title="Last refresh from the local engine">
+        <span id="pill-updated-text">—</span>
+      </span>
+      <button class="ghost-btn" id="refresh-btn" type="button" title="Refresh now">
+        <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M13.6 8a5.6 5.6 0 1 1-1.7-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M13.4 1.4v3h-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Refresh
+      </button>
+      <a class="ghost-btn" href="/" title="Back to the product home page">Home</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="kpis" id="kpis" aria-label="Key metrics"></section>
+
+    <section class="panel panel-map">
+      <div class="panel-head">
+        <div>
+          <h2>Threat origin map</h2>
+          <p class="panel-sub" id="map-sub">Sending infrastructure resolved from local IP databases</p>
+        </div>
+        <div class="panel-tools">
+          <div class="seg" role="group" aria-label="Map filter">
+            <button type="button" class="seg-btn is-active" data-mapfilter="all">All</button>
+            <button type="button" class="seg-btn" data-mapfilter="flagged">Flagged</button>
+            <button type="button" class="seg-btn" data-mapfilter="campaign">Campaigns</button>
+          </div>
+          <button class="ghost-btn" id="map-reset" type="button" title="Reset zoom">Reset view</button>
+        </div>
+      </div>
+
+      <div class="map-body">
+        <div class="map-canvas-wrap" id="map-canvas-wrap">
+          <canvas id="map-canvas"></canvas>
+          <div class="map-tip" id="map-tip" hidden></div>
+          <div class="map-hint">Scroll to zoom · drag to pan</div>
+        </div>
+
+        <aside class="legend" aria-label="Map legend">
+          <h3>Legend</h3>
+
+          <div class="legend-group">
+            <h4>Marker colour — severity</h4>
+            <ul class="legend-list" id="legend-severity"></ul>
+          </div>
+
+          <div class="legend-group">
+            <h4>Marker shape &amp; size</h4>
+            <ul class="legend-list">
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="5" fill="#d9660a"/></svg></span>
+                <span class="lg-text"><b>Filled dot</b><em>City-level fix — exact coordinates from the database</em></span>
+              </li>
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="5" fill="none" stroke="#d9660a" stroke-width="2" stroke-dasharray="2.6 2.2"/></svg></span>
+                <span class="lg-text"><b>Dashed outline</b><em>Country-level fix only — plotted at the country centroid</em></span>
+              </li>
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="3.4" fill="#1e88e5"/><circle cx="12" cy="12" r="8" fill="none" stroke="#1e88e5" stroke-width="1.2" opacity=".55"/><circle cx="12" cy="12" r="11" fill="none" stroke="#1e88e5" stroke-width="1" opacity=".25"/></svg></span>
+                <span class="lg-text"><b>Pulsing ring</b><em>Flagged in the last 6 hours — still active</em></span>
+              </li>
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="8" cy="12" r="3" fill="#5d7794"/><circle cx="16" cy="12" r="6.5" fill="#5d7794"/></svg></span>
+                <span class="lg-text"><b>Dot size</b><em>Number of cases sharing that origin — larger means more mail</em></span>
+              </li>
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 17 C 9 5, 15 5, 21 17" fill="none" stroke="#6f42c1" stroke-width="1.8" stroke-dasharray="3 2.4"/><circle cx="3" cy="17" r="2.2" fill="#6f42c1"/><circle cx="21" cy="17" r="2.2" fill="#6f42c1"/></svg></span>
+                <span class="lg-text"><b>Violet arc</b><em>Same campaign fingerprint sent from two origins</em></span>
+              </li>
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="4.5" y="4.5" width="15" height="15" rx="3" fill="none" stroke="#06203f" stroke-width="1.8"/><path d="M8.5 12h7M12 8.5v7" stroke="#06203f" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                <span class="lg-text"><b>Selected case</b><em>Highlighted from the case table below</em></span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="legend-group">
+            <h4>Basemap</h4>
+            <ul class="legend-list">
+              <li class="legend-item">
+                <span class="lg-swatch lg-density" aria-hidden="true"><i style="opacity:.30"></i><i style="opacity:.55"></i><i style="opacity:.95"></i></span>
+                <span class="lg-text"><b>Grid density</b><em>Routed-network density — darker where more of the internet lives</em></span>
+              </li>
+              <li class="legend-item">
+                <span class="lg-swatch"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M2 12h20M12 2v20" stroke="#9ed4fb" stroke-width="1.3"/></svg></span>
+                <span class="lg-text"><b>Graticule</b><em>Equator and prime meridian</em></span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="legend-note" id="legend-unlocated"></div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Campaign clusters</h2>
+            <p class="panel-sub">Messages grouped by body fingerprint — a shared hub means one template</p>
+          </div>
+          <div class="panel-tools">
+            <span class="mini-legend"><i class="ml-dot ml-hub"></i>Campaign template</span>
+            <span class="mini-legend"><i class="ml-dot ml-node"></i>Message</span>
+            <span class="mini-legend"><i class="ml-line"></i>Shared fingerprint</span>
+          </div>
+        </div>
+        <div class="graph-wrap">
+          <canvas id="graph-canvas"></canvas>
+          <div class="map-tip" id="graph-tip" hidden></div>
+          <div class="empty-state" id="graph-empty" hidden>No repeated fingerprints yet</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Threat categories</h2>
+            <p class="panel-sub">Tier 0 verdict distribution across every stored case</p>
+          </div>
+        </div>
+        <div class="bars" id="category-bars"></div>
+        <div class="panel-head panel-head-sub">
+          <div><h2>Top origin countries</h2></div>
+        </div>
+        <div class="bars bars-compact" id="country-bars"></div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Case log</h2>
+          <p class="panel-sub" id="case-sub">Every message the engine has scored</p>
+        </div>
+        <div class="panel-tools">
+          <div class="search">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.6 10.6 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="search" id="case-search" placeholder="Search sender, subject, threat, country…" autocomplete="off" />
+          </div>
+          <div class="chips" id="severity-chips"></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="cases">
+          <thead>
+            <tr>
+              <th data-sort="timestamp" class="sortable is-sorted-desc">Time</th>
+              <th data-sort="severity" class="sortable">Severity</th>
+              <th data-sort="score" class="sortable">Score</th>
+              <th data-sort="category" class="sortable">Threat</th>
+              <th data-sort="sender" class="sortable">From</th>
+              <th data-sort="subject" class="sortable">Subject</th>
+              <th data-sort="country" class="sortable">Origin</th>
+              <th>Auth</th>
+              <th class="col-report">Report</th>
+            </tr>
+          </thead>
+          <tbody id="case-table"></tbody>
+        </table>
+        <div class="empty-state" id="case-empty" hidden>No cases match the current filter</div>
+      </div>
+    </section>
+
+    <section class="panel" id="ledger-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Evidence ledger</h2>
+          <p class="panel-sub">Each case sealed into a SHA-256 hash chain — altering a stored verdict breaks every block after it</p>
+        </div>
+        <div class="panel-tools">
+          <span class="chain-state" id="chain-state">
+            <span class="pill-dot"></span><span id="chain-state-text">Checking chain…</span>
+          </span>
+          <button class="ghost-btn" id="verify-btn" type="button">Verify chain</button>
+        </div>
+      </div>
+
+      <div class="ledger-body">
+        <div class="ledger-stats" id="ledger-stats"></div>
+        <div class="chain-strip" id="chain-strip"></div>
+        <p class="ledger-note" id="ledger-note"></p>
+      </div>
+    </section>
+  </main>
+
+  <aside class="drawer" id="drawer" hidden aria-label="Case detail">
+    <div class="drawer-head">
+      <div>
+        <span class="sev-tag" id="drawer-sev">—</span>
+        <h2 id="drawer-title">Case</h2>
+        <p class="panel-sub" id="drawer-sub"></p>
+      </div>
+      <div class="drawer-actions">
+        <a class="btn btn-primary" id="drawer-report" href="#">Full forensic report</a>
+        <button class="ghost-btn" id="drawer-close" type="button" aria-label="Close">Close</button>
+      </div>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+  <div class="drawer-scrim" id="drawer-scrim" hidden></div>
+
+  <footer class="foot">
+    <span>TrT local engine v{{ app_version }}</span>
+    <span class="dot-sep">·</span>
+    <span id="foot-geo">IP intelligence: local database</span>
+    <span class="dot-sep">·</span>
+    <span id="foot-chain">Evidence ledger: checking…</span>
+    <span class="dot-sep">·</span>
+    <span>All analysis performed on this device</span>
+  </footer>
+
+  <script id="embedded-payload" type="application/json">{{ embedded_payload | safe }}</script>
+  <script id="embedded-geo" type="application/json">{{ embedded_geo | safe }}</script>
+  <script src="/static/worldmap.js"></script>
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

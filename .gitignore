@@ -1,0 +1,9 @@
+﻿__pycache__/
+*.pyc
+*.log
+*.rar
+*.mmdb
+*.etdidx
+.env
+desktop-app/data/
+desktop-app/GeoLite2/

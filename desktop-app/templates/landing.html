@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrT — Threat Recognition and Tracker</title>
+  <meta name="description" content="On-device email fraud detection. Every verdict backed by a forensic evidence chain, sealed in a tamper-evident ledger." />
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/brand.css" />
+  <link rel="stylesheet" href="/static/landing.css" />
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="trt-lockup" href="/" aria-label="TrT — Threat Recognition and Tracker">
+    <img class="trt-logo" src="/static/trt-mark.png" alt="TrT" width="837" height="323" />
+    <span class="trt-tag">Threat Recognition<br />and Tracker</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#capabilities">Capabilities</a>
+    <a href="#cascade">Detection</a>
+    <a href="#ledger">Evidence ledger</a>
+    <a href="#privacy">Privacy</a>
+    <a class="btn btn-primary" href="/dashboard">Open dashboard</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow"><i></i>Engine running on 127.0.0.1:{{ engine_port }}</span>
+        <h1>Email fraud, caught on the machine where the mail is opened.</h1>
+        <p class="lede">
+          TrT reads every message your browser opens in Gmail, runs a two-tier detection
+          cascade against it locally, and returns a verdict with the full forensic chain
+          that produced it — sender authentication, relay path, origin infrastructure and
+          per-category model confidence. Nothing is uploaded. Nothing is scored in a cloud
+          you do not control.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/dashboard">
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M2 9.5h4v4.5H2zM2 2h4v5.5H2zM8 2h6v4.5H8zM8 8.5h6V14H8z" fill="currentColor"/></svg>
+            Open the SecOps dashboard
+          </a>
+          <a class="btn btn-ghost" href="#ledger">How the evidence ledger works</a>
+        </div>
+
+        <dl class="hero-stats">
+          <div><dt>Messages analysed</dt><dd>{{ totals.analyzed }}</dd></div>
+          <div><dt>Threats flagged</dt><dd>{{ totals.flagged }}</dd></div>
+          <div><dt>Categories seen</dt><dd>{{ totals.categories }}</dd></div>
+          <div><dt>Ledger blocks</dt><dd>{{ totals.blocks }}</dd></div>
+        </dl>
+      </div>
+
+      <figure class="hero-art" aria-label="Verdict card example">
+        <div class="vcard">
+          <div class="vcard-top">
+            <span class="sev-tag sev-critical"><i></i>Critical · 94/100</span>
+            <span class="vcard-id mono">CASE-4471</span>
+          </div>
+          <h3>Fake-Invoice Fraud</h3>
+          <p class="vcard-sub">accounts@nvoice-billing.co · seen 4 minutes ago</p>
+          <ul class="vcard-ev">
+            <li><span>SPF authentication</span><b class="flag-fail">fail</b></li>
+            <li><span>Domain age</span><b class="flag-fail">6 days</b></li>
+            <li><span>Origin</span><b>Hosting ASN · NL</b></li>
+            <li><span>Tier 1 adapter</span><b>fake_invoice 0.93</b></li>
+          </ul>
+          <div class="vcard-chain">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M6.5 9.5 9.5 6.5M5.5 10.5a2.8 2.8 0 0 1 0-4l1.4-1.4a2.8 2.8 0 0 1 4 4l-.7.7M10.5 5.5a2.8 2.8 0 0 1 0 4l-1.4 1.4a2.8 2.8 0 0 1-4-4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Sealed in block #1182 · chain verified
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="capabilities">
+    <div class="section-head">
+      <h2>What the system does</h2>
+      <p>Four surfaces over one pipeline — the inline badge for the person reading mail, the dashboard for the people defending the organisation.</p>
+    </div>
+
+    <div class="cards">
+      <article class="card">
+        <span class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3 4 6.2v5.4c0 4.9 3.3 8.6 8 9.4 4.7-.8 8-4.5 8-9.4V6.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.6 12.1l2.5 2.5 4.4-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Verdict on every message</h3>
+        <p>Not just the bad ones. A visible safe score means “checked and clean”, so silence is never mistaken for safety.</p>
+      </article>
+
+      <article class="card">
+        <span class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 12h4l2.5-6 4 13 2.5-7H21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Header &amp; IP forensics</h3>
+        <p>SPF, DKIM and DMARC results, relay-hop chain, domain age, ASN reputation and origin geography — resolved from local databases.</p>
+      </article>
+
+      <article class="card">
+        <span class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="6" cy="7" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="7" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="17.5" r="2.8" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7.8 8.8 10.6 15M16.2 8.8 13.4 15M8.6 7h6.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <h3>Campaign correlation</h3>
+        <p>Template fingerprints link messages that arrived separately, surfacing one operation instead of five unrelated incidents.</p>
+      </article>
+
+      <article class="card">
+        <span class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3.5" y="4" width="17" height="16" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7.5 9h9M7.5 12.5h9M7.5 16h5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <h3>Per-email forensic report</h3>
+        <p>Every case opens into a standalone, printable report: verdict, weighted evidence chain, authentication table, relay path and ledger seal.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="cascade">
+    <div class="section-head">
+      <h2>The detection cascade</h2>
+      <p>Cheap checks first, the heavy model only when the answer is genuinely uncertain.</p>
+    </div>
+
+    <ol class="cascade">
+      <li>
+        <span class="step">Tier 0</span>
+        <div>
+          <h3>Gatekeeper <em>— runs on every message</em></h3>
+          <p>
+            A LightGBM classifier over engineered header, protocol and IP-trust features returns a
+            fraud probability plus a distribution across threat categories. Clear-cut mail resolves
+            here in milliseconds, and the category ranking decides what Tier 1 checks first.
+          </p>
+          <span class="status {{ 'ok' if tier0_ready else 'off' }}">
+            {{ 'Model loaded' if tier0_ready else 'Model not found' }}
+          </span>
+        </div>
+      </li>
+      <li>
+        <span class="step">Tier 1</span>
+        <div>
+          <h3>Specialist adapters <em>— only for ambiguous mail</em></h3>
+          <p>
+            One ModernBERT-base encoder is held in memory, with a small independently trained LoRA
+            adapter attached per threat category and detached again after the check. Categories are
+            tried in Tier 0's probability order and the cascade stops at the first confirmation, so a
+            case usually resolves in one or two checks rather than thirty.
+          </p>
+        </div>
+      </li>
+      <li>
+        <span class="step">Chain</span>
+        <div>
+          <h3>Evidence scoring <em>— never a single opaque number</em></h3>
+          <p>
+            Each contributing factor is kept separately as <span class="mono">{factor, contribution, explanation}</span>,
+            so a verdict can be handed to an investigator, to HR or to legal and defended line by line
+            instead of taken on faith.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" id="ledger">
+    <div class="ledger-split">
+      <div>
+        <span class="eyebrow eyebrow-plain">Tamper-evident storage</span>
+        <h2>Every report is sealed into a hash chain</h2>
+        <p class="lede lede-sm">
+          The moment a case is scored, its forensic content is hashed with SHA-256 and written into a
+          block that also carries the hash of the block before it. Editing a stored verdict after the
+          fact — changing a score, softening an evidence line, deleting an inconvenient case — breaks
+          that block's hash and every hash that follows it, and the dashboard reports the chain as
+          broken with the exact block identified.
+        </p>
+        <p class="lede lede-sm">
+          It is the block structure of a blockchain used for what it is actually good at here: proving
+          a record has not been altered since it was written. There is no external chain, no wallet and
+          no network call — the proof recomputes from two files on this machine, which is what keeps it
+          usable inside an air-gapped environment.
+        </p>
+        <a class="btn btn-ghost" href="/dashboard#ledger-panel">See the live chain</a>
+      </div>
+
+      <figure class="chain-art" aria-label="Hash chain diagram">
+        <div class="blk">
+          <span class="blk-n mono">#1180</span>
+          <span class="blk-h mono">b7f2…a19c</span>
+          <span class="blk-p mono">prev 44e1…08bd</span>
+        </div>
+        <div class="blk-link" aria-hidden="true"></div>
+        <div class="blk">
+          <span class="blk-n mono">#1181</span>
+          <span class="blk-h mono">3c08…7fd2</span>
+          <span class="blk-p mono">prev b7f2…a19c</span>
+        </div>
+        <div class="blk-link" aria-hidden="true"></div>
+        <div class="blk blk-head">
+          <span class="blk-n mono">#1182 · head</span>
+          <span class="blk-h mono">9ae4…c531</span>
+          <span class="blk-p mono">prev 3c08…7fd2</span>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="privacy">
+    <div class="section-head">
+      <h2>Where the data goes</h2>
+      <p>The short answer is nowhere. The long answer has exactly one footnote, and it is stated plainly.</p>
+    </div>
+
+    <div class="privacy-grid">
+      <div class="pv">
+        <h3>Analysis is local</h3>
+        <p>The browser extension talks to <span class="mono">127.0.0.1</span> only. Message content and headers are scored on the same machine that opened the mail.</p>
+      </div>
+      <div class="pv">
+        <h3>Enrichment is offline</h3>
+        <p>Geolocation, ASN and hosting checks are answered from local IP databases, so no third party learns which addresses you looked up.</p>
+      </div>
+      <div class="pv">
+        <h3>Storage is inspectable</h3>
+        <p>Cases are plain JSONL on disk with a readable ledger beside them — no opaque database, no vendor export required to audit your own history.</p>
+      </div>
+      <div class="pv pv-note">
+        <h3>The one exception</h3>
+        <p>If campaign sync is switched on, a structural fingerprint and sender infrastructure — never content — may be shared to the organisation's own index so cross-inbox campaigns can be recognised.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <a class="trt-lockup" href="/" aria-label="TrT — Threat Recognition and Tracker">
+      <img class="trt-logo trt-logo-sm" src="/static/trt-mark.png" alt="TrT" width="837" height="323" />
+      <span class="trt-tag">Threat Recognition<br />and Tracker</span>
+    </a>
+    <p>Local engine v{{ app_version }} · all analysis performed on this device</p>
+    <nav class="foot-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/health">Engine health</a>
+      <a href="/api/ledger/verify">Verify ledger</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

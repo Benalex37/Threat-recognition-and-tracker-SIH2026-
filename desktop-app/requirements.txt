@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+lightgbm
+transformers
+torch
+peft
+sentencepiece
+protobuf
+dnspython
+python-whois
+checkdmarc
+dkimpy
+pyspf
+maxminddb-geolite2
+requests

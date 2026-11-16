@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrT — Settings</title>
+  <link rel="stylesheet" href="ext-brand.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <img class="logo" src="trt-mark.png" alt="TrT" width="837" height="323">
+      <span class="logo-tag">Threat Recognition<br>and Tracker</span>
+      <div>
+        <h1>Settings <span id="options-version"></span></h1>
+        <p>Local engine connection and detection coverage. Nothing leaves this device.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Local engine</h2>
+          <p class="sub">The extension talks to the engine over 127.0.0.1 only.</p>
+        </div>
+        <span class="pill" id="conn-pill" data-state="checking">
+          <span class="pill-dot"></span><span id="conn-text">Checking…</span>
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field">
+            <label for="port">API port</label>
+            <input type="number" id="port" min="1" max="65535" placeholder="8001" inputmode="numeric">
+            <p class="hint">Must match <code>local_port</code> in <code>desktop-app/data/config.json</code>. Default: 8001.</p>
+          </div>
+          <div class="field-actions">
+            <button class="btn btn-primary" id="save-port" type="button">Save &amp; test</button>
+            <button class="btn btn-ghost" id="detect-port" type="button">Auto-detect</button>
+          </div>
+        </div>
+        <div id="port-status" class="status-msg"></div>
+
+        <ul class="components" id="components"></ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Detection categories</h2>
+          <p class="sub">
+            The Tier 0 model covers five categories today. The rest are listed for
+            roadmap visibility and stay disabled until their adapters are trained.
+          </p>
+        </div>
+        <span class="counter" id="category-counter">—</span>
+      </div>
+
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="seg" role="group" aria-label="Filter categories">
+            <button type="button" class="seg-btn is-active" data-filter="all">All</button>
+            <button type="button" class="seg-btn" data-filter="live">Live</button>
+            <button type="button" class="seg-btn" data-filter="soon">Coming soon</button>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-ghost" id="select-all" type="button">Enable all live</button>
+            <button class="btn btn-ghost" id="select-none" type="button">Disable all live</button>
+          </div>
+        </div>
+
+        <div class="category-grid" id="category-grid"></div>
+
+        <div class="save-row">
+          <button class="btn btn-primary" id="save-categories" type="button">Save categories</button>
+          <div id="category-status" class="status-msg"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>
